@@ -1,5 +1,9 @@
 # mini-local-message
 
+> 当前分支：`spring-boot3-jdk21`。适配 JDK 21、Spring Boot 3.5.6、MySQL 8.x。
+>
+> Spring Boot 3 使用 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 做自动装配；老的 `spring.factories` 在本分支只保留为空注释，方便看迁移历史。
+
 一个轻量级 Spring Boot starter，用来复用“本地消息表 / 可靠执行”方案。
 
 它参考了 `E:\happy-chat\happy-chat\happy-chat-boot\happy-chat-boot` 中学过的 `SecureInvoke` 方案：业务事务内先把“要执行的方法”写入本地消息表，事务提交后再执行真实方法；如果失败，后台定时任务按退避策略重试。
@@ -22,7 +26,7 @@ mvn clean install
 <dependency>
     <groupId>com.xx</groupId>
     <artifactId>mini-local-message-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
 

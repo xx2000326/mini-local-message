@@ -23,6 +23,24 @@
       "type": "java.lang.Integer",
       "defaultValue": 50,
       "description": "Maximum number of retry records fetched in one scheduler tick."
+    },
+    {
+      "name": "mini-local-message.retry-delay-seconds",
+      "type": "java.lang.Long",
+      "defaultValue": 120,
+      "description": "Initial retry delay in seconds after an execution failure."
+    },
+    {
+      "name": "mini-local-message.retry-multiplier",
+      "type": "java.lang.Double",
+      "defaultValue": 2.0,
+      "description": "Backoff multiplier used to calculate the next retry delay."
+    },
+    {
+      "name": "mini-local-message.max-retry-delay-seconds",
+      "type": "java.lang.Long",
+      "defaultValue": 3600,
+      "description": "Maximum retry delay in seconds."
     }
   ]
 }

@@ -1,5 +1,9 @@
 # 本地消息表方案总结
 
+> 当前分支：`spring-boot3-jdk21`。本分支把 starter 基线升级到 JDK 21、Spring Boot 3.5.6、MySQL 8.x。
+>
+> 主要变化：Maven 使用 `--release 21` 编译；自动装配入口改为 Spring Boot 3 推荐的 `AutoConfiguration.imports`；MySQL 脚本使用 JSON 字段保存方法快照。
+
 这份总结来自 happy-chat 项目里 `SecureInvoke` 的学习版本，并把它抽成更通用的 starter 思路。
 
 ## 要解决的问题
