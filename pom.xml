@@ -6,15 +6,15 @@
 
     <groupId>com.xx</groupId>
     <artifactId>mini-local-message-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>mini-local-message-spring-boot-starter</name>
     <description>A small Spring Boot starter for the local message table pattern.</description>
 
     <properties>
-        <java.version>1.8</java.version>
-        <spring-boot.version>2.6.13</spring-boot.version>
+        <java.version>21</java.version>
+        <spring-boot.version>3.5.6</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -67,6 +67,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -76,10 +77,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                 </configuration>

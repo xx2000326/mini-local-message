@@ -1,2 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.xx.minilocalmessage.autoconfigure.LocalMessageAutoConfiguration
+# Spring Boot 3 uses META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports.
+# This file is intentionally kept empty for Boot 2 compatibility history.

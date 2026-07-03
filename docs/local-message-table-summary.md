@@ -1,6 +1,10 @@
 # 本地消息表方案总结
 
-这份总结来自 happy-chat 项目里 `SecureInvoke` 的学习版本，并把它抽成更通用的 starter 思路。
+> 当前分支：`spring-boot3-jdk21`。本分支把 starter 基线升级到 JDK 21、Spring Boot 3.5.6、MySQL 8.x。
+>
+> 主要变化：Maven 使用 `--release 21` 编译；自动装配入口改为 Spring Boot 3 推荐的 `AutoConfiguration.imports`；MySQL 脚本使用 JSON 字段保存方法快照。
+
+这份文档说明本地消息表方案的设计目标、执行链路、适用场景和注意事项。
 
 ## 要解决的问题
 
@@ -15,24 +19,22 @@
 
 本地消息表的目标是：让“业务数据变更”和“待发送消息记录”在同一个数据库事务里提交，然后由后台任务保证消息最终被执行。
 
-## happy-chat 里的核心链路
+## 核心链路
 
-happy-chat 中的命名是 `SecureInvoke`：
-
-1. 业务方法在事务内调用 `rocketMqProducer.sendSecureMsg(...)`。
-2. `@SecureInvoke` 切面发现当前有 Spring 事务，不直接发送 RocketMQ。
-3. 切面把类名、方法名、参数类型、参数值序列化成 JSON，写入 `secure_invoke_record`。
+1. 业务方法在事务内调用带 `@LocalMessage` 的副作用方法。
+2. `@LocalMessage` 切面发现当前有 Spring 事务，不直接执行原方法。
+3. 切面把类名、方法名、参数类型、参数值序列化成 JSON，写入本地消息表。
 4. 注册 `TransactionSynchronization.afterCommit()`。
-5. 外层事务提交后，afterCommit 异步调用原方法，真正发送 RocketMQ。
+5. 外层事务提交后，afterCommit 异步调用原方法，真正执行副作用动作。
 6. 如果发送失败，记录保留在表中，并更新失败原因、下次重试时间、重试次数。
 7. `@Scheduled` 定时任务扫描到期记录，再次反射执行原方法。
 8. 执行成功后删除本地消息记录；达到最大失败次数后标记为失败，交给人工排查或补偿。
 
 ## starter 的调整
 
-这个仓库保留了原来的思想，但做了几处泛化：
+这个 starter 做了几处取舍：
 
-1. 注解推荐名改为 `@LocalMessage`，旧名 `@SecureInvoke` 作为兼容注解保留。
+1. 对外只推荐使用 `@LocalMessage`，让注解语义直接对应本地消息表模式。
 2. 不绑定 RocketMQ。任何“事务提交后可靠执行”的 void 方法都可以使用。
 3. 不绑定 MyBatis / MyBatis-Plus。底层只依赖 `JdbcTemplate`，更容易放进不同项目。
 4. 配置项统一放在 `mini-local-message.*` 下。

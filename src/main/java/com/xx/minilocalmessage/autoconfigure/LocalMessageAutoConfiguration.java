@@ -8,7 +8,7 @@ import com.xx.minilocalmessage.core.LocalMessageService;
 import com.xx.minilocalmessage.repository.LocalMessageRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -30,13 +29,12 @@ import java.util.concurrent.Executor;
  * <p>应用只要引入 starter、准备好 JdbcTemplate 和本地消息表，就会自动启用
  * {@code @LocalMessage} 切面、记录仓库、可靠执行服务和重试调度任务。</p>
  */
-@Configuration
+@AutoConfiguration(after = JdbcTemplateAutoConfiguration.class)
 @EnableScheduling
 @EnableConfigurationProperties(LocalMessageProperties.class)
 @ConditionalOnClass({JdbcTemplate.class, ProceedingJoinPoint.class, TransactionSynchronizationManager.class})
 @ConditionalOnBean(JdbcTemplate.class)
 @ConditionalOnProperty(prefix = "mini-local-message", name = "enabled", havingValue = "true", matchIfMissing = true)
-@AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
 public class LocalMessageAutoConfiguration {
 
     @Bean
