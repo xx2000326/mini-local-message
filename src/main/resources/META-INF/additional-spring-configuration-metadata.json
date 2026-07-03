@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "mini-local-message.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable the local message table starter."
+    },
+    {
+      "name": "mini-local-message.table-name",
+      "type": "java.lang.String",
+      "defaultValue": "local_message_record",
+      "description": "Database table used to store pending reliable method invocations."
+    },
+    {
+      "name": "mini-local-message.retry-cron",
+      "type": "java.lang.String",
+      "defaultValue": "*/5 * * * * ?",
+      "description": "Cron expression for scanning records that are ready to retry."
+    },
+    {
+      "name": "mini-local-message.retry-fetch-size",
+      "type": "java.lang.Integer",
+      "defaultValue": 50,
+      "description": "Maximum number of retry records fetched in one scheduler tick."
+    }
+  ]
+}

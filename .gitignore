@@ -1,0 +1,10 @@
+target/
+.agents/
+.codex/
+*.iml
+.idea/
+.classpath
+.project
+.settings/
+.vscode/
+*.log
