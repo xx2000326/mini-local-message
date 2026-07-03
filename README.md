@@ -6,7 +6,7 @@
 
 一个轻量级 Spring Boot starter，用来复用“本地消息表 / 可靠执行”方案。
 
-它参考了 `E:\happy-chat\happy-chat\happy-chat-boot\happy-chat-boot` 中学过的 `SecureInvoke` 方案：业务事务内先把“要执行的方法”写入本地消息表，事务提交后再执行真实方法；如果失败，后台定时任务按退避策略重试。
+它适合在业务事务提交后可靠执行副作用动作，例如发送 MQ、调用外部接口、刷新搜索索引或通知缓存。starter 会先把“要执行的方法快照”写入本地消息表，事务提交后再执行真实方法；如果失败，后台定时任务按退避策略重试。
 
 ## 方案一句话
 
@@ -24,7 +24,7 @@ mvn clean install
 
 ```xml
 <dependency>
-    <groupId>com.xx</groupId>
+    <groupId>io.github.yourname</groupId>
     <artifactId>mini-local-message-spring-boot-starter</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
@@ -111,9 +111,9 @@ mini-local-message:
 4. 必须通过 Spring Bean 调用，不能在同一个类里 self-invocation。
 5. 没有 Spring 事务时，方法会直接执行，不会落本地消息表。
 
-## 和 happy-chat 版本的关系
+## 设计方案
 
-happy-chat 里的核心类是 `SecureInvoke`、`SecureInvokeAspect`、`SecureInvokeService`、`SecureInvokeRecord`。这个 starter 保留了同样的执行链路：
+starter 的执行链路如下：
 
 1. AOP 拦截注解方法。
 2. 事务内把方法快照写入本地消息表。
@@ -122,6 +122,6 @@ happy-chat 里的核心类是 `SecureInvoke`、`SecureInvokeAspect`、`SecureInv
 5. 失败记录保留并定时重试。
 6. 成功删除记录，最终失败保留原因。
 
-新项目推荐使用 `@LocalMessage`。如果你从 happy-chat 迁移代码，也可以临时继续使用兼容注解 `@SecureInvoke`。
+新项目推荐统一使用 `@LocalMessage`，让代码语义直接对应本地消息表模式。
 
-更详细的学习总结见 [docs/local-message-table-summary.md](docs/local-message-table-summary.md)。
+更详细的设计说明见 [docs/local-message-table-summary.md](docs/local-message-table-summary.md)。
